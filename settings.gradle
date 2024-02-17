@@ -1,0 +1,2 @@
+rootProject.name = 'spring-security-6'
+include 'A-multi-filter'
