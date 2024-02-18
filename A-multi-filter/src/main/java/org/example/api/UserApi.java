@@ -28,4 +28,31 @@ public class UserApi {
 
         return randomId;
     }
+
+    @GetMapping("/information")
+    public String getInformation() {
+        return "information";
+    }
+
+    @GetMapping("/rank")
+    public String rank() {
+        return "rank";
+    }
+
+    @GetMapping("/like")
+    public String like() {
+        return "like";
+    }
+
+    @PostMapping("/join")
+    public String join() {
+
+        return "Join";
+    }
+
+    @PostMapping("/login")
+    public String login() {
+
+        return "Login";
+    }
 }

@@ -1,45 +1,63 @@
 package org.example.security;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class UserSecurityConfig {
+    private static final String END_POINT_PREFIX = "/api/users/**";
 
     private static final String[] ALLOW_LIST = new String[]{
-            "/api/users",
+            "/api/users/join",
+            "/api/users/login",
+    };
+
+    private static final String[] AUTH_LIST = new String[]{
+            "/api/users/information",
+            "/api/users/rank",
+            "/api/users/like",
     };
 
     @Bean
-    @Order(0)
+    @Order(1)
     public SecurityFilterChain userDoFilterChain(HttpSecurity http) throws Exception {
         return http
+                .securityMatcher(END_POINT_PREFIX)
 
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
-                .headers(h -> h.frameOptions(FrameOptionsConfig::disable))
+                .headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .sessionManagement(s -> s.sessionCreationPolicy(STATELESS))
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(ALLOW_LIST).permitAll()
+                        .requestMatchers(GET, AUTH_LIST).hasRole("ADMIN")
+                        .requestMatchers(POST, ALLOW_LIST).permitAll()
+                        .anyRequest().authenticated()
                 )
 
                 .exceptionHandling(e ->
                         e.accessDeniedHandler(
-                                ((request, response, accessDeniedException) ->
-                                        System.out.println("UserSecurityConfig.userDoFilterChain")
-                                )))
+                                        ((request, response, accessDeniedException) -> {
+                                            response.setStatus(HttpStatus.I_AM_A_TEAPOT.value());
+                                            System.out.println("UserSecurityConfig.userDoFilterChain.denied");
+                                        }))
+                                .authenticationEntryPoint((request, response, authException) -> {
+                                    response.setStatus(HttpStatus.LOCKED.value());
+                                    System.out.println("UserSecurityConfig.userDoFilterChain.entrypoint");
+                                })
+                )
 
                 .build();
     }
