@@ -7,17 +7,15 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
 import static org.springframework.http.HttpMethod.*;
-import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class PostSecurityConfig {
+
     private static final String END_POINT_PREFIX = "/domain/posts/**";
 
     private static final String[] ALLOW_LIST = new String[]{
@@ -26,15 +24,13 @@ public class PostSecurityConfig {
     };
 
     @Bean
-    @Order(0)
+    @Order(1)
     public SecurityFilterChain postDoFilterChain(HttpSecurity http) throws Exception {
         return http
                 .securityMatcher(END_POINT_PREFIX)
 
-                .csrf(AbstractHttpConfigurer::disable)
-                .cors(AbstractHttpConfigurer::disable)
-                .headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
-                .sessionManagement(s -> s.sessionCreationPolicy(STATELESS))
+                .with(BaseSecurityConfig.customDsl(),
+                        BaseSecurityConfig::activite)
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(DELETE).authenticated()
@@ -47,11 +43,11 @@ public class PostSecurityConfig {
                 .exceptionHandling(e ->
                         e.authenticationEntryPoint(((request, response, authException) -> {
                                     response.setStatus(HttpStatus.LOCKED.value());
-                                    System.out.println("PostSecurityConfig.postDoFilterChain");
+                                    System.out.println("PostSecurityConfig.postDoFilterChain.entryPoint");
                                 }))
                                 .accessDeniedHandler((request, response, accessDeniedException) -> {
                                     response.setStatus(HttpStatus.I_AM_A_TEAPOT.value());
-                                    System.out.println("PostSecurityConfig.postDoFilterChain");
+                                    System.out.println("PostSecurityConfig.postDoFilterChain.denied");
                                 })
                 )
 
