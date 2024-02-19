@@ -1,2 +1,4 @@
 rootProject.name = 'spring-security-6'
 include 'A-multi-filter'
+include 'B-multi-authentication'
+
