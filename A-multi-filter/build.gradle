@@ -5,3 +5,10 @@ bootJar {
 jar {
     enabled = true
 }
+
+dependencies {
+    testImplementation 'io.rest-assured:rest-assured:5.4.0'
+//    testImplementation 'io.rest-assured:json-path:4.4.0'
+//    testImplementation 'io.rest-assured:xml-path:4.4.0'
+//    testImplementation 'io.rest-assured:rest-assured-common:4.4.0'
+}
