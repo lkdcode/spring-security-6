@@ -35,11 +35,6 @@ public class UserSecurityConfig {
                         .anyRequest().authenticated()
                 )
 
-                .exceptionHandling(e ->
-                        e.authenticationEntryPoint(new UserAuthenticationEntryPoint())
-                                .accessDeniedHandler(new UserAccessDeniedHandler())
-                )
-
                 .build();
     }
 }

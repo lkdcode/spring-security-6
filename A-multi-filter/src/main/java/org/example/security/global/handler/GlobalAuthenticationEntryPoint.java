@@ -1,4 +1,4 @@
-package org.example.security.user;
+package org.example.security.global.handler;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,11 +9,11 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 
 import java.io.IOException;
 
-class UserAuthenticationEntryPoint implements AuthenticationEntryPoint {
+class GlobalAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        System.out.println("UserAuthenticationEntryPoint.commence");
+        System.out.println("GlobalAuthenticationEntryPoint.commence");
         response.setStatus(HttpStatus.I_AM_A_TEAPOT.value());
     }
 }

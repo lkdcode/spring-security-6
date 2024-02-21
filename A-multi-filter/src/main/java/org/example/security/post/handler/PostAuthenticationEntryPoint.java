@@ -1,4 +1,4 @@
-package org.example.security.post;
+package org.example.security.post.handler;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

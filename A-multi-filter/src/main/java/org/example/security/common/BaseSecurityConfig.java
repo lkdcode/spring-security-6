@@ -8,7 +8,15 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 
 public class BaseSecurityConfig extends AbstractHttpConfigurer<BaseSecurityConfig, HttpSecurity> {
 
+    private final BaseAccessDeniedHandler baseAccessDeniedHandler;
+    private final BaseAuthenticationEntryPoint baseAuthenticationEntryPoint;
+
     private boolean flag;
+
+    private BaseSecurityConfig(BaseAccessDeniedHandler baseAccessDeniedHandler, BaseAuthenticationEntryPoint baseAuthenticationEntryPoint) {
+        this.baseAccessDeniedHandler = baseAccessDeniedHandler;
+        this.baseAuthenticationEntryPoint = baseAuthenticationEntryPoint;
+    }
 
     @Override
     public void init(HttpSecurity http) throws Exception {
@@ -17,7 +25,13 @@ public class BaseSecurityConfig extends AbstractHttpConfigurer<BaseSecurityConfi
                     .csrf(AbstractHttpConfigurer::disable)
                     .cors(AbstractHttpConfigurer::disable)
                     .headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
-                    .sessionManagement(s -> s.sessionCreationPolicy(STATELESS));
+                    .sessionManagement(s -> s.sessionCreationPolicy(STATELESS))
+
+                    .exceptionHandling(e -> e
+                            .accessDeniedHandler(baseAccessDeniedHandler)
+                            .authenticationEntryPoint(baseAuthenticationEntryPoint)
+                    )
+            ;
         }
     }
 
@@ -26,6 +40,9 @@ public class BaseSecurityConfig extends AbstractHttpConfigurer<BaseSecurityConfi
     }
 
     public static BaseSecurityConfig customDsl() {
-        return new BaseSecurityConfig();
+        return new BaseSecurityConfig(
+                new BaseAccessDeniedHandler(),
+                new BaseAuthenticationEntryPoint()
+        );
     }
 }

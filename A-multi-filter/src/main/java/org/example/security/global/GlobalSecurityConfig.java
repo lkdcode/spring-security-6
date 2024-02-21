@@ -15,15 +15,11 @@ public class GlobalSecurityConfig {
                 .securityMatcher(TARGET)
 
                 .with(BaseSecurityConfig.customDsl(),
-                        BaseSecurityConfig::activite)
+                        BaseSecurityConfig::activite
+                )
 
                 .authorizeHttpRequests(auth -> auth
                         .anyRequest().authenticated()
-                )
-
-                .exceptionHandling(e ->
-                        e.authenticationEntryPoint(new GlobalAuthenticationEntryPoint())
-                                .accessDeniedHandler(new GlobalAccessDeniedHandler())
                 )
 
                 .build();

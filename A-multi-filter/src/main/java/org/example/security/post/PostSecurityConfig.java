@@ -32,11 +32,6 @@ public class PostSecurityConfig {
                         .anyRequest().authenticated()
                 )
 
-                .exceptionHandling(e ->
-                        e.authenticationEntryPoint(new PostAuthenticationEntryPoint())
-                                .accessDeniedHandler(new PostAccessDeniedHandler())
-                )
-
                 .build();
     }
 }

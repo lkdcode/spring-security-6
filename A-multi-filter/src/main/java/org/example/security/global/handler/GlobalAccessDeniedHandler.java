@@ -1,4 +1,4 @@
-package org.example.security.post;
+package org.example.security.global.handler;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,11 +9,11 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 
 import java.io.IOException;
 
-class PostAccessDeniedHandler implements AccessDeniedHandler {
+class GlobalAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-        System.out.println("PostAccessDeniedHandler.handle");
+        System.out.println("GlobalAccessDeniedHandler.handle");
         response.setStatus(HttpStatus.I_AM_A_TEAPOT.value());
     }
 }
