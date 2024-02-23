@@ -19,7 +19,7 @@ public class GlobalSecurityConfig {
                 )
 
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().authenticated()
+                        .anyRequest().denyAll()
                 )
 
                 .build();
